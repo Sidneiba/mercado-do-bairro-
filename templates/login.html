@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Mamão Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <div class="painel">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="erro">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <h3>Cliente</h3>
+            <form method="POST" action="/cliente">
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="password" name="senha" placeholder="Senha (6 dígitos)" required>
+                <button type="submit" name="acao" value="entrar">Entrar</button>
+                <button type="submit" name="acao" value="cadastrar">Cadastrar</button>
+                <input type="text" name="endereco" placeholder="Endereço" required>
+                <input type="text" name="telefone" placeholder="Telefone" required>
+                <input type="text" name="cep" placeholder="CEP" required>
+            </form>
+            <h3>Lojista</h3>
+            <form method="POST" action="/lojista">
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="password" name="senha" placeholder="Senha (6 dígitos)" required>
+                <button type="submit" name="acao" value="entrar">Entrar</button>
+                <button type="submit" name="acao" value="cadastrar">Cadastrar</button>
+                <button type="submit" name="acao" value="entrar_como_cliente">Entrar como Cliente</button>
+                <input type="text" name="endereco" placeholder="Endereço" required>
+                <input type="text" name="telefone" placeholder="Telefone" required>
+                <input type="text" name="cep" placeholder="CEP" required>
+                <input type="number" name="raio" placeholder="Raio de entrega (km)" required>
+            </form>
+        </div>
+        <button class="voltar" onclick="location.href='/'">Voltar</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cliente - Mamão Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo, {{ cliente.nome }}</h1>
+        <div class="painel painel-cliente">
+            <h3>Lojistas Próximos</h3>
+            <div class="scroll">
+                {% for lojista in lojistas %}
+                    <div>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="acao" value="selecionar_lojista">
+                            <input type="hidden" name="lojista_id" value="{{ lojista.id }}">
+                            <button type="submit">{{ lojista.nome }} ({{ lojista.raio }} km)</button>
+                        </form>
+                        - <a href="/chat/{{ cliente.id }}/{{ lojista.id }}">Chat</a>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3>Carrinho - {{ lojista_selecionado.nome }}</h3>
+            <div class="scroll">
+                {% for produto in produtos %}
+                    <div>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="produto_id" value="{{ produto.id }}">
+                            <input type="hidden" name="acao" value="adicionar">
+                            <button type="submit">{{ produto.nome }} - R${{ "%.2f" % produto.preco }}</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3>Itens Selecionados</h3>
+            <div class="scroll-itens">
+                {% for item in carrinho_itens %}
+                    <div>
+                        {{ item.quantidade }}x {{ item.nome }} - R${{ "%.2f" % item.preco_unitario }} (Total: R${{ "%.2f" % item.subtotal }})
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="produto_id" value="{{ (produtos|selectattr('nome', 'equalto', item.nome)|list)[0].id }}">
+                            <input type="hidden" name="acao" value="remover">
+                            <button type="submit">Remover</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3>Total: R${{ "%.2f" % total }}</h3>
+            <form method="POST">
+                <input type="hidden" name="acao" value="pagar">
+                <button type="submit">Pagar</button>
+            </form>
+        </div>
+        <button class="voltar" onclick="location.href='/'">Voltar</button>
+    </div>
+</body>
+</html>

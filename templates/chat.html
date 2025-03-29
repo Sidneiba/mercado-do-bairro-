@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat - Mamão Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h1>Chat com {{ lojista.nome }}</h1>
+        <div class="painel">
+            <div class="scroll">
+                <div class="recebida">Olá! Para pagar seu pedido, envie o valor total via Pix para a chave: 11987654321. Confirme o pagamento aqui no chat!</div>
+                {% for mensagem in mensagens %}
+                    <div class="{% if mensagem.remetente == 'cliente' %}enviada{% else %}recebida{% endif %}">
+                        {{ mensagem.texto }}
+                        {% if mensagem.audio %}(Áudio){% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <form method="POST">
+                <textarea name="texto" placeholder="Digite sua mensagem"></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+        <button class="voltar" onclick="location.href='/painel_cliente/{{ cliente.id }}'">Voltar</button>
+    </div>
+</body>
+</html>

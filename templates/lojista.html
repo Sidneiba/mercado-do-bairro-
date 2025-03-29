@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caixa - Mamão Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h1>Caixa - {{ lojista.nome }}</h1>
+        <div class="painel">
+            <h3>Status da Loja: {{ 'Aberta' if lojista.online else 'Fechada' }}</h3>
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="acao" value="{{ 'fechar_loja' if lojista.online else 'abrir_loja' }}">
+                <button type="submit">{{ 'Fechar Loja' if lojista.online else 'Abrir Loja' }}</button>
+            </form>
+            <h3>Pedidos Abertos</h3>
+            <div class="scroll">
+                {% for pedido in pedidos_abertos %}
+                    <div>
+                        Cliente: {{ Cliente.query.get(pedido.cliente_id).nome }}<br>
+                        Endereço: {{ Cliente.query.get(pedido.cliente_id).endereco }}<br>
+                        Itens: {{ pedido.itens }}<br>
+                        Total: R${{ "%.2f" % pedido.total }}<br>
+                        Status: {{ pedido.status }} - <a href="/chat/{{ pedido.cliente_id }}/{{ lojista.id }}">Chat</a><br>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="acao" value="atualizar_pedido">
+                            <input type="hidden" name="pedido_id" value="{{ pedido.id }}">
+                            <select name="status">
+                                <option value="Aberto">Aberto</option>
+                                <option value="Pago">Pago</option>
+                                <option value="Entregue">Entregue</option>
+                                <option value="Cancelado">Cancelado</option>
+                                <option value="Concluído">Concluído</option>
+                            </select>
+                            <button type="submit">Atualizar</button>
+                        </form>
+                        <p>Confirmar endereço de entrega e forma de pagamento</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3>Pedidos Fechados</h3>
+            <div class="scroll">
+                {% for pedido in pedidos_fechados %}
+                    <div>
+                        Cliente: {{ Cliente.query.get(pedido.cliente_id).nome }}<br>
+                        Endereço: {{ Cliente.query.get(pedido.cliente_id).endereco }}<br>
+                        Itens: {{ pedido.itens }}<br>
+                        Total: R${{ "%.2f" % pedido.total }}<br>
+                        Status: {{ pedido.status }} - <a href="/chat/{{ pedido.cliente_id }}/{{ lojista.id }}">Chat</a><br>
+                        <p>Confirmar endereço de entrega e forma de pagamento</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <h3>Estoque Resumido</h3>
+            <div class="scroll">
+                {% for produto in estoque %}
+                    <div>{{ produto.nome }} - R${{ "%.2f" % produto.preco }}</div>
+                {% endfor %}
+            </div>
+            <h3>Configurar Catálogo</h3>
+            <form method="POST">
+                <input type="hidden" name="acao" value="adicionar_produto">
+                <input type="text" name="nome" placeholder="Nome do Produto" required>
+                <input type="text" name="tipo" placeholder="Tipo" required>
+                <input type="text" name="unidade" placeholder="Unidade" required>
+                <input type="number" name="quantidade" placeholder="Quantidade" required>
+                <input type="text" name="codigo" placeholder="Código" required>
+                <input type="number" step="0.01" name="preco" placeholder="Preço" required>
+                <button type="submit">Adicionar Produto</button>
+            </form>
+        </div>
+        <button class="voltar" onclick="location.href='/'">Voltar</button>
+    </div>
+</body>
+</html>
